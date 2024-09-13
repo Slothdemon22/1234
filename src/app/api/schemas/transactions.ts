@@ -19,17 +19,12 @@ const TransactionSchema: Schema<Transaction> = new mongoose.Schema({
         type: Number,
         required: true
     },
-    category: {
-        type: String
-    },
+    
     date: {
         type: Date,
         required: true
     },
-    description: {
-        type: String,
-        required: true
-    }
+   
 }, { timestamps: true }); // Adds createdAt and updatedAt timestamps
 
 // Export the Transaction model

@@ -8,6 +8,7 @@ import mongoose, { Document } from "mongoose";
 
 // POST handler for creating an event
 export const POST = async (req: NextRequest) => {
+    console.log("hello")
     await dbConnect();
     
     // Get token from cookies and verify it
@@ -16,12 +17,15 @@ export const POST = async (req: NextRequest) => {
 
     //console.log(decodedToken.id);
     const user = await UserModel.findById(decodedToken.id);
+    console.log("after")
 
     try {
-        const { name, description, date, time, location, image, organizer, isAuthorized } = await req.json();
+        const { name, description, date, time, location, imageUrl } = await req.json();
+        console.log("name", name, "description", description, "date", date, "time", time, "location", location, "image", imageUrl)
+       
 
         // Validate that all required fields are present
-        if (!name || !description || !date || !time || !location || !image ) {
+        if (!name || !description || !date || !time || !location || !imageUrl ) {
             return NextResponse.json({
                 status: "error",
                 message: "All required fields must be provided"
@@ -32,16 +36,17 @@ export const POST = async (req: NextRequest) => {
         const event = new EventModel({
             name,
             description,
-            date,
+            date:date,
             time,
             location,
-            image,
+            image: imageUrl,
             organizer: user?._id,
-            isAuthorized
+            
         });
 
         // Save the event to the database and cast to Document
         const savedEvent = await event.save();
+        console.log(event)
 
         // Access _id correctly
         const eventId = savedEvent._id as mongoose.Types.ObjectId;

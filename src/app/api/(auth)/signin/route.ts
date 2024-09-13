@@ -2,11 +2,15 @@ import mongoose from "mongoose";
 import User from "../../schemas/user";
 import { NextResponse, NextRequest } from "next/server";
 import jwt from 'jsonwebtoken'
+import { NextApiRequest, NextApiResponse } from "next";
+import { Resend } from "resend";
  // Assuming you're using bcrypt for password hashing
 import dbConnect from '@/helper/dbConn';
+import EmailTemplate from "@/helper/loginEmail";
 import bcrypt from 'bcrypt';
-
+import EventTicketEmail from "@/helper/registerEmail";
 export const POST = async (req: NextRequest) => {
+    const resend = new Resend("re_7Efe9VUV_MNJcunLJG7kQycruNAhgf6RU");
     try {
         // Parse request body
         const { email, password } = await req.json();
@@ -48,9 +52,24 @@ export const POST = async (req: NextRequest) => {
             status: "success",
             message: "Login successful"
         });
+    
+        
+      {  const { data, error } = await resend.emails.send({
+            from: 'noReply@tradenexusonline.com',
+            to: [user.email], // Assuming patient object has an email field
+            subject: 'Login Confirmation',
+            react: EmailTemplate({ name: user.name})
+            
+        });}
+        const { data, error } = await resend.emails.send({
+            from: 'noReply@tradenexusonline.com',
+            to: [user.email], // Assuming patient object has an email field
+            subject: 'Login Confirmation',
+            react: EventTicketEmail({recipientName: user.name,eventName:"Event Name",organizerName:"Organizer Name",eventDate:"Event Date",eventTime:"12:00"})
+            
+        });
         response.cookies.set("token", token)
         return response;
-
 
 
     } catch (error: any) {

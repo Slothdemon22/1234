@@ -63,7 +63,9 @@ const EventSchema: Schema<Event> = new mongoose.Schema({
     ]
 }, { timestamps: true }); // timestamps will add createdAt and updatedAt fields
 
+
 // Check if the model already exists before defining it
+
 const EventModel: Model<Event> = mongoose.models.Event || mongoose.model<Event>("Event", EventSchema);
 
 export default EventModel;

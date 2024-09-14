@@ -1,50 +1,43 @@
-// app/payment/page.tsx
-'use client';
+"use client";
+import { useRouter } from 'next/navigation';
+import { Button } from "@/components/ui/button";
 
-import { useState } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
+export default function Component() {
+  const router = useRouter(); // use useRouter for navigation
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
-export default function PaymentPage() {
-  const [loading, setLoading] = useState(false);
-
-  const handleCheckout = async () => {
-    setLoading(true);
-
-    // Amount in cents (e.g., $20 -> 2000 cents)
-    const amount = 10*1000; // Dynamic amount, can come from user input, etc.
-
-    try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ amount, eventID: '66e4336dd46fa1d770afb815' }),
-      });
-
-      const { sessionId } = await res.json();
-      const stripe = await stripePromise;
-
-      await stripe?.redirectToCheckout({ sessionId });
-      
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-    }
+  const handleRedirect = () => {
+    router.push('/explore'); // Redirect to the explore route
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-2xl font-bold mb-6">Pay  10$</h1>
-      <button
-        className="bg-blue-500 text-white px-6 py-2 rounded"
-        onClick={handleCheckout}
-        disabled={loading}
-      >
-        {loading ? 'Loading...' : 'Checkout'}
-      </button>
-    </div>
+    <section className="w-full py-12 md:py-24 lg:py-32 bg-black text-white">
+      <div className="container grid items-center gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-12">
+        <div className="space-y-4 p-5">
+          <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm text-black">Upcoming Events</div>
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+            Discover Our <span className="bg-gradient-to-r from-[#099ef1] via-[#6863f8] to-[#ff891f] bg-clip-text text-transparent">Exciting Events</span>
+          </h2>
+          <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            Join us for a variety of engaging events, from informative workshops to lively social gatherings. Expand
+            your knowledge, connect with like-minded individuals, and have a great time.
+          </p>
+          <Button
+            className="bg-white text-black rounded-xl font-semibold text-xl hover:bg-slate-200"
+            onClick={handleRedirect} // Trigger redirection on click
+          >
+            View Events
+          </Button>
+        </div>
+        <div className="relative overflow-hidden rounded-xl">
+          <video
+            src="https://cdn.lu.ma/landing/phone-dark.mp4"
+            autoPlay
+            muted
+            loop
+            className="object-cover w-full h-full"
+          ></video>
+        </div>
+      </div>
+    </section>
   );
 }

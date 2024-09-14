@@ -61,13 +61,7 @@ export const POST = async (req: NextRequest) => {
             react: EmailTemplate({ name: user.name})
             
         });}
-        const { data, error } = await resend.emails.send({
-            from: 'noReply@tradenexusonline.com',
-            to: [user.email], // Assuming patient object has an email field
-            subject: 'Login Confirmation',
-            react: EventTicketEmail({recipientName: user.name,eventName:"Event Name",organizerName:"Organizer Name",eventDate:"Event Date",eventTime:"12:00"})
-            
-        });
+       
         response.cookies.set("token", token)
         return response;
 

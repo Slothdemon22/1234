@@ -45,9 +45,9 @@ const EventSchema: Schema<Event> = new mongoose.Schema({
         ref: "User",
         required: true
     },
-    isAutherized:{
-        type:Boolean,
-        default:false
+    isAutherized: {
+        type: Boolean,
+        default: false
     },
     participants: [
         {
@@ -66,6 +66,7 @@ const EventSchema: Schema<Event> = new mongoose.Schema({
 
 // Check if the model already exists before defining it
 
-const EventModel: Model<Event> = mongoose.models.Event || mongoose.model<Event>("Event", EventSchema);
+const EventModel: Model<Event> = mongoose.models.Event || mongoose.model<Event>("Event", EventSchema)
+
 
 export default EventModel;

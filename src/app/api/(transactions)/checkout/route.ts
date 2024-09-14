@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken';
 import { headers } from 'next/headers';
 import event from '../../schemas/event';
 import TransactionModel from '../../schemas/transactions';
+import dbConnect from '@/helper/dbConn';
+import UserModel from '@/app/api/schemas/user';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
 });
@@ -12,7 +14,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 export async function POST(req: NextRequest) {
   try {
     // Parse the JSON body
-      const { amount, eventID } = await req.json(); // Dynamically passed amount from client    
+    const { amount, eventId } = await req.json(); // Dynamically passed amount from client  
+    console.log(amount,eventId)
+    await dbConnect();
       
 
     // Get the token from cookies
@@ -32,6 +36,14 @@ export async function POST(req: NextRequest) {
     }
 
     const cusID = decodedToken.id;
+  //   const user = await UserModel.findById(cusID) as any;
+  //   {  const { data, error } = await resend.emails.send({
+  //     from: 'noReply@tradenexusonline.com',
+  //     to: [user.email], // Assuming patient object has an email field
+  //     subject: 'Login Confirmation',
+  //     react: EmailTemplate({ name: user.name})
+      
+  // });}
 
     // Create the Stripe checkout session
     const session = await stripe.checkout.sessions.create({
@@ -51,13 +63,10 @@ export async function POST(req: NextRequest) {
         mode: 'payment',
         success_url: `${req.headers.get('origin')}/success`,
         cancel_url: `${req.headers.get('origin')}/cancel`,
-        metadata: {
-            userId: cusID, // Add metadata here
-            event:eventID
-        },
+       
     });
-      console.log(amount, eventID);
-      const Event=await event.findById(eventID) as any;
+      //console.log(amount, eventID);
+      const Event=await event.findById(eventId) as any;
       const transaction = await TransactionModel.create({
           name: Event?.name,
           amount: amount,

@@ -1,22 +1,18 @@
 // components/EventTicketEmail.tsx
 
 interface EventTicketEmailProps {
-    recipientName: string;
     eventName: string;
     eventDate: string;
     eventTime: string;
     eventLocation: string;
-    organizerName: string;
 }
 
 const EventTicketEmail = ({
-    recipientName,
     eventName,
     eventDate,
     eventTime,
     eventLocation,
-    organizerName,
-}: any) => (
+}: EventTicketEmailProps) => (
     <html lang="en">
         <head>
             <meta charSet="UTF-8" />
@@ -98,17 +94,15 @@ const EventTicketEmail = ({
                 </div>
                 <h1 className="email-title">You're Invited!</h1>
                 <div className="content">
-                    <p>Dear <strong>{recipientName}</strong>,</p>
                     <p>We are excited to inform you that your ticket for the upcoming event has been successfully booked. Below are the details:</p>
                     <div className="details">
                         <p><strong>Event:</strong> {eventName}</p>
                         <p><strong>Date:</strong> {eventDate}</p>
                         <p><strong>Time:</strong> {eventTime}</p>
                         <p><strong>Location:</strong> {eventLocation}</p>
-                        <p><strong>Organizer:</strong> {organizerName}</p>
                     </div>
                     <p>We look forward to seeing you at the event!</p>
-                    <p>Best regards,<br />{organizerName}</p>
+                    <p>Best regards,<br />Your Event Team</p>
                 </div>
                 <div className="footer">
                     <p>&copy; {new Date().getFullYear()} Your Company. All rights reserved.</p>
